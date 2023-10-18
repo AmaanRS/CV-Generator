@@ -1,0 +1,5 @@
+PORT = 8080
+DEV_MODE = development
+MONGO_URL = ////mongourl
+JWT_SECRET = jdjfiwfuwifhwiefhweifhwe
+///backend folder .env file 
