@@ -1,9 +1,16 @@
 import { comparePassword, hashPassword } from "../helpers/authHelper.js";
 import userModel from "../models/userModel.js";
 import JWT from "jsonwebtoken";
+import nodemailer from "nodemailer";
+var otp
+
+const generate_otp = ()=>{
+  otp = Math.floor(Math.random()*100000)
+}
+
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, phone, address } = req.body;
+    const { name, email, password, phone, address} = req.body;
     //validation
     if (!name) {
       return res.send({message: "Name is required" });
@@ -30,6 +37,33 @@ export const registerController = async (req, res) => {
         message: "already registere pz login",
       });
     }
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: 'amaanshaikh786420@gmail.com',
+          pass: process.env.GMAIL_PASSWORD
+      }
+  });
+    try {
+      const {email} = req.body
+      generate_otp()
+      var mailOptions = {
+        from: 'amaanshaikh786420@gmail.com',
+          to: email,
+          subject: `OTP verification`,
+          text: `Your OTP is ${otp}`
+        };
+        await transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+              return res.status(400).send({ success:false,message: "Email sent Unsuccessfully", error: error.message })
+          } else {
+              res.status(200).send({ success:true, message: "Email sent Successfully"})}
+      });
+  } catch (error) {
+    return res.status(400).send({ success:false,message: "Email: Something went wrong", error: error.message })}
+    
+
     //rsgister user
     const hashedPassword = await hashPassword(password);
     //save
@@ -80,7 +114,7 @@ export const loginController = async (req, res) => {
     if (!match) {
       return res.status(200).send({
         success: false,
-        message: "envalid password",
+        message: "Invalid password",
       });
     }
     ///////TOKEN CREATE

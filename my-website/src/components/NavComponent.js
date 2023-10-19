@@ -15,6 +15,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/auth.js";
 import Header from "./Header.js";
 
+
 function NavComponent() {
   const location = useLocation();
   const [show, setShow] = useState(false);
@@ -47,6 +48,7 @@ function NavComponent() {
   const [phone, SetPhone] = useState("");
   const [address, SetAddress] = useState("");
   const [auth, setAuth] = useAuth();
+  const [otp, setOtp] = useState(0);
   // form function
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,16 +62,16 @@ function NavComponent() {
       });
       if (res.data.success) {
         toast.success(res.data.message);
-        if (window.Email) {
-          window.Email.send({
-            SecureToken: "5003673a-3d81-4ca7-8c50-8e7c21d5190e",
-            To: email,
-            From: "adityasingh280303@gmail.com",
-            Subject: "welcome",
-            Body: `<h1>Welcome to our awesome website!</h1><p>Thank you for joining us.</p>`,
-          });
-          toast.success("mail sent");
-        }
+        // if (window.Email) {
+        //   window.Email.send({
+        //     SecureToken: "5003673a-3d81-4ca7-8c50-8e7c21d5190e",
+        //     To: email,
+        //     From: "adityasingh280303@gmail.com",
+        //     Subject: "welcome",
+        //     Body: `<h1>Welcome to our awesome website!</h1><p>Thank you for joining us.</p>`,
+        //   });
+      // }
+      toast.success("mail sent");
       } else {
         toast.error(res.data.message);
         setActiveTab("login");
@@ -105,6 +107,23 @@ function NavComponent() {
       toast.error("something went wrong");
     }
   };
+
+  // const otp_field = async()=>{
+    
+  // }
+
+  //Take the otp from the user and send it to the backend for cross checking..remaining
+  const submitotp = async()=>{
+    try {
+      const res = await axios.post("/api/v1/auth/login", {
+        email,
+        password,
+      });
+    }catch(error){
+      console.log(error);
+      toast.error("something went wrongg");
+      }
+  }
 
   return (
     <>
@@ -358,6 +377,34 @@ function NavComponent() {
                       }}
                     >
                       Signup
+                    </Button>
+                  </Row>
+                  <Row>
+                    <label>OTP :</label>
+                    <input
+                      className="bg-dark text-white"
+                      type="Number"
+                      id="otp"
+                      onChange={(e) => {
+                        setOtp(e.target.value);
+                      }}
+                    />
+                  </Row>
+                  <Row>
+                    <Button
+                      xs="auto"
+                      type="submit"
+                      className=""
+                      variant="outline-light"
+                      style={{
+                        margin: "auto",
+                        top: "4px",
+                        position: "relative",
+                        width: "auto",
+                      }}
+                      onClick={submitotp}
+                    >
+                      Check Otp
                     </Button>
                   </Row>
                 </Container>
