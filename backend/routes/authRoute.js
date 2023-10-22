@@ -2,7 +2,8 @@ import express from "express";
 import {
   registerController,
   loginController,
-  testController
+  testController,
+  otp_check
 } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 //router object
@@ -13,6 +14,9 @@ router.post("/register", registerController);
 
 //login||post
 router.post("/login", loginController);
+
+//Cross check otp
+router.post("/otp_check", otp_check);
 
 //test route
 router.get("/test",requireSignIn,isAdmin, testController);

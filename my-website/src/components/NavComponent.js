@@ -70,8 +70,8 @@ function NavComponent() {
         //     Subject: "welcome",
         //     Body: `<h1>Welcome to our awesome website!</h1><p>Thank you for joining us.</p>`,
         //   });
-      // }
-      toast.success("mail sent");
+        // }
+        toast.success("mail sent");
       } else {
         toast.error(res.data.message);
         setActiveTab("login");
@@ -109,20 +109,21 @@ function NavComponent() {
   };
 
   // const otp_field = async()=>{
-    
+
   // }
 
   //Take the otp from the user and send it to the backend for cross checking..remaining
-  const submitotp = async()=>{
+  const submitotp = async (e) => {
+    e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/auth/login", {
-        email,
-        password,
+      console.log("otp is",otp)
+      const res = await axios.post("/api/v1/auth/otp_check", {
+        otp: otp
       });
-    }catch(error){
+    } catch (error) {
       console.log(error);
       toast.error("something went wrongg");
-      }
+    }
   }
 
   return (
@@ -296,89 +297,94 @@ function NavComponent() {
               </Form>
             ) : (
               // Display signup input fields when the "Signup" tab is active
-              <Form onSubmit={handleSubmit}>
-                <Container fluid className="login-modal text-white ">
-                  <Row>
-                    <label>Name:</label>
-                    <input
-                      className="bg-dark text-white"
-                      type="text"
-                      id="getName"
-                      value={name}
-                      onChange={(e) => {
-                        SetName(e.target.value);
-                      }}
-                      required
-                    />
-                  </Row>
-                  <Row>
-                    <label>Email:</label>
-                    <input
-                      className="bg-dark text-white"
-                      type="email"
-                      id="getEmail"
-                      value={email}
-                      onChange={(e) => {
-                        SetEmail(e.target.value);
-                      }}
-                      required
-                    />
-                  </Row>
-                  <Row>
-                    <label>Phone no. :</label>
-                    <input
-                      className="bg-dark text-white"
-                      type="Number"
-                      id="getPhone"
-                      value={phone}
-                      onChange={(e) => {
-                        SetPhone(e.target.value);
-                      }}
-                      required
-                    />
-                  </Row>
-                  <Row>
-                    <label>Address:</label>
-                    <input
-                      className="bg-dark text-white"
-                      type="text"
-                      value={address}
-                      id="getAddress"
-                      onChange={(e) => {
-                        SetAddress(e.target.value);
-                      }}
-                      required
-                    />
-                  </Row>
-                  <Row>
-                    <label>Password:</label>
-                    <input
-                      className="bg-dark text-white"
-                      type="password"
-                      id="getPassword"
-                      value={password}
-                      onChange={(e) => {
-                        SetPassword(e.target.value);
-                      }}
-                      required
-                    />
-                  </Row>
-                  <Row>
-                    <Button
-                      xs="auto"
-                      type="submit"
-                      className=""
-                      variant="outline-light"
-                      style={{
-                        margin: "auto",
-                        top: "4px",
-                        position: "relative",
-                        width: "auto",
-                      }}
-                    >
-                      Signup
-                    </Button>
-                  </Row>
+              <>
+                <Form onSubmit={handleSubmit}>
+                  <Container fluid className="login-modal text-white ">
+                    <Row>
+                      <label>Name:</label>
+                      <input
+                        className="bg-dark text-white"
+                        type="text"
+                        id="getName"
+                        value={name}
+                        onChange={(e) => {
+                          SetName(e.target.value);
+                        }}
+                        required
+                      />
+                    </Row>
+                    <Row>
+                      <label>Email:</label>
+                      <input
+                        className="bg-dark text-white"
+                        type="email"
+                        id="getEmail"
+                        value={email}
+                        onChange={(e) => {
+                          SetEmail(e.target.value);
+                        }}
+                        required
+                      />
+                    </Row>
+                    <Row>
+                      <label>Phone no. :</label>
+                      <input
+                        className="bg-dark text-white"
+                        type="Number"
+                        id="getPhone"
+                        value={phone}
+                        onChange={(e) => {
+                          SetPhone(e.target.value);
+                        }}
+                        required
+                      />
+                    </Row>
+                    <Row>
+                      <label>Address:</label>
+                      <input
+                        className="bg-dark text-white"
+                        type="text"
+                        value={address}
+                        id="getAddress"
+                        onChange={(e) => {
+                          SetAddress(e.target.value);
+                        }}
+                        required
+                      />
+                    </Row>
+                    <Row>
+                      <label>Password:</label>
+                      <input
+                        className="bg-dark text-white"
+                        type="password"
+                        id="getPassword"
+                        value={password}
+                        onChange={(e) => {
+                          SetPassword(e.target.value);
+                        }}
+                        required
+                      />
+                    </Row>
+                    <Row>
+                      <Button
+                        xs="auto"
+                        type="submit"
+                        className=""
+                        variant="outline-light"
+                        style={{
+                          margin: "auto",
+                          top: "4px",
+                          position: "relative",
+                          width: "auto",
+                        }}
+                      >
+                        Signup
+                      </Button>
+                    </Row>
+
+                  </Container>
+                </Form>
+                <Form onSubmit={submitotp}>
                   <Row>
                     <label>OTP :</label>
                     <input
@@ -402,13 +408,12 @@ function NavComponent() {
                         position: "relative",
                         width: "auto",
                       }}
-                      onClick={submitotp}
                     >
                       Check Otp
                     </Button>
                   </Row>
-                </Container>
-              </Form>
+                </Form>
+              </>
             )}
           </Modal.Body>
           <Modal.Footer style={{ backgroundColor: "#302f3b" }}>

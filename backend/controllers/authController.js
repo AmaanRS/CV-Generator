@@ -61,19 +61,19 @@ export const registerController = async (req, res) => {
               res.status(200).send({ success:true, message: "Email sent Successfully"})}
       });
   } catch (error) {
-    return res.status(400).send({ success:false,message: "Email: Something went wrong", error: error.message })}
-    
-
-    //rsgister user
+    return res.status(400).send({ success:false,message: "Email: Something went wrong", error: error.message })
+  }
+  
+    //register user
     const hashedPassword = await hashPassword(password);
     //save
-    const user = await new userModel({
-      name,
-      email,
-      phone,
-      address,
-      password: hashedPassword,
-    }).save();
+    // const user = await new userModel({
+    //   name,
+    //   email,
+    //   phone,
+    //   address,
+    //   password: hashedPassword,
+    // }).save();
     res.status(201).send({
       success: true,
       message: "user register succesfully",
@@ -88,6 +88,13 @@ export const registerController = async (req, res) => {
     });
   }
 };
+
+export const otp_check = async(req,res)=>{
+  let user_otp = req.body.otp
+  //Break the registerController into two if the otp_check sends sucess:true as response then by js function submitotp another post request with the users data will be sent to the sceond part of registerController that is yet to be made,this route will save the user into the database and registration will be complete.
+  //Extra :Make it so that when the opt is not sent the check OTP button will be disabled
+  console.log("user_otp issss",user_otp)
+}
 
 ///POST LOGIN
 export const loginController = async (req, res) => {
